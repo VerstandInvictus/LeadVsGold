@@ -11,8 +11,11 @@
 </head>
 <body>
 <div class="cover">
-  <img src="http://192.168.29.172:5000/image/0" class="cover" id="mainImg"/>
+  <img src="" class="cover" id="mainImg"/>
 </div>
+<script>
+    $('#mainImg').attr('src', window.location.origin.slice(0, -5) +':5000/image/0')
+</script>
 <script src="scripts/leadvsgold.js"></script>
 </body>
 </html>
