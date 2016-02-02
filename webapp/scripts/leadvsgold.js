@@ -11,7 +11,7 @@ $(function(){
         },
         swipeRight:function(event, direction, distance, duration, fingerCount) {
             var numRand = Math.floor(Math.random() * 10001);
-            $('#mainImg').attr('src', + flaskServ + '/prev/' +
+            $('#mainImg').attr('src', flaskServ + '/prev/' +
             numRand);
         }
   });
