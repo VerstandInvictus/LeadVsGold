@@ -1,6 +1,6 @@
-var flaskServ = 'http' + window.location.origin.split(':')[1] + '5000'
+var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000'
 
-$('#mainImg').attr('src', + flaskServ + '/image/0')
+$('#mainImg').attr('src', flaskServ + '/image/0')
 
 $(function(){
   $( ".ui-page" ).swipe( {
