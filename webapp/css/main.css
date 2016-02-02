@@ -1,0 +1,16 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+div.cover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+img.cover {
+  display: table-row;
+  object-fit: contain;
+  width: 100%;
+  height: 100vh;
+}
