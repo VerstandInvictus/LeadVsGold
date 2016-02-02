@@ -49,6 +49,12 @@ def crossdomain(origin=None, methods=None, headers=None,
 app = Flask(__name__)
 
 
+class fileObject(object):
+    def __init__(self, name, location):
+        self.name=name
+        self.location=location
+
+
 class fileList(object):
 
     def __init__(self):
@@ -60,108 +66,59 @@ class fileList(object):
             down=os.path.join(self.outputFolder, config.downfolder),
             skip=os.path.join(self.outputFolder, "skipped"),
         )
-        self.history = list()
-        self.curFile = None
-        self.getAFile()
+        self.stackQueue = list()
+        self.noneObject = fileObject('nomore.png', 'webapp\\img\\nomore.png')
+        for f in self.stackFiles:
+            fileobj = fileObject(f, os.path.join(
+                self.stackFolder, f))
+            self.stackQueue.append(fileobj)
+        self.index = 0
 
-    def getAFile(self):
+    def updateLocation(self, index, location):
+        self.stackQueue[index].location = location
+
+    def getCurFile(self):
         try:
-            cf = self.stackFiles.pop()
-            cfp = os.path.join(self.stackFolder, cf)
+            return self.stackQueue[self.index]
         except IndexError:
-            self.reInit()
-            return None
-        self.curFile = dict(
-            filename=cf,
-            obj=cfp
-        )
+            return self.noneObject
 
-    def getOldFile(self):
-        if len(self.history) != 0:
-            hf = self.history.pop()
-            cf = hf['filename']
-            cfp = hf['obj']
-            dst = os.path.join(self.stackFolder, cf)
-            shutil.copy(cfp, dst)
-            self.stackFiles.append(cf)
-        else:
-            self.curFile = None
+    def incrementIndex(self, num):
+        self.index += num
+        print self.index
+        print self.stackQueue
 
-    def reInit(self):
-        self.stackFiles = os.listdir(self.stackFolder)
-        if len(self.stackFiles) == 0:
-            pass
-        else:
-            self.getAFile()
+    def setIndex(self, num):
+        self.index = num
 
 
 @app.route('/image/<nonce>')
 @crossdomain(origin='*')
 def showFile(nonce):
-    print fl.history
-    if fl.curFile is not None:
-        try:
-            return send_file(fl.curFile['obj'])
-        except IOError:
-            fl.reInit()
-            return send_file('webapp\\img\\nomore.png')
-    else:
-        fl.reInit()
-        return send_file('webapp\\img\\nomore.png')
+    return send_file(fl.getCurFile().location)
 
 
-@app.route('/next/<action>')
+@app.route('/next/<action>/<nonce>')
 @crossdomain(origin='*')
-def skipForward(action):
-    cf = fl.curFile
-    if cf is not None:
-        wf = os.path.join(fl.stackFolder, cf['obj'])
-        np = os.path.join(fl.actions[action], cf['filename'])
-        print fl.actions[action]
-        print cf['filename']
-        print np
-        shutil.copy2(wf, np)
-        os.remove(wf)
-        check = fl.history[-1] if len(fl.history) > 0 else None
-        if check is None:
-            fl.history.append(dict(
-                filename=cf['filename'],
-                obj=np
-                ))
-        else:
-            if cf['filename'] != check['filename']:
-                print "adnew"
-                fl.history.append(dict(
-                    filename=cf['filename'],
-                    obj=np
-                ))
-        fl.getAFile()
-    else:
-        pass
-    return "OK", 200
+def skipForward(action, nonce):
+    curFile = fl.getCurFile()
+    if curFile == fl.noneObject:
+        fl.setIndex(0)
+        return send_file(fl.noneObject.location)
+    newPath = os.path.join(fl.actions[action], curFile.name)
+    if curFile.location != newPath:
+        shutil.copy2(curFile.location, newPath)
+        os.remove(curFile.location)
+        fl.updateLocation(fl.index, newPath)
+    fl.incrementIndex(1)
+    return send_file(fl.getCurFile().location)
 
 
-@app.route('/prev')
+@app.route('/prev/<nonce>')
 @crossdomain(origin='*')
-def skipBack():
-    fl.getOldFile()
-    cf = fl.curFile
-    if cf is not None:
-        wf = os.path.join(fl.stackFolder, cf['obj'])
-        check = fl.history[-1] if len(fl.history) > 0 else None
-        if check is None:
-            fl.history.append(dict(
-                filename=cf['filename'],
-                obj=wf
-            ))
-        else:
-            if cf != check:
-                print "adnew"
-                fl.history.append(dict(
-                    filename=cf['filename'],
-                    obj=wf
-                ))
-    return "OK", 200
+def skipBack(nonce):
+    fl.incrementIndex(-1)
+    return send_file(fl.getCurFile().location)
 
 
 if __name__ == '__main__':
@@ -169,4 +126,4 @@ if __name__ == '__main__':
     for each in fl.actions.itervalues():
         if not os.path.exists(each):
             os.makedirs(each)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
