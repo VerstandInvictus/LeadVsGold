@@ -8,8 +8,8 @@ $(function(){
             var numRand = Math.floor(Math.random() * 10001);
             $('#mainImg').fadeTo(150,0.30, function() {
                 $('#mainImg').attr('src', flaskServ + '/next/skip/' +
-                    numRand);
-            }).fadeTo(150,1);
+                    numRand).fadeTo(150, 1);
+            });
             return false;
 
         },
