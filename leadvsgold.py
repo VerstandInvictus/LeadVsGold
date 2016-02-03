@@ -85,8 +85,6 @@ class fileList(object):
 
     def incrementIndex(self, num):
         self.index += num
-        print self.index
-        print self.stackQueue
 
     def setIndex(self, num):
         self.index = num
