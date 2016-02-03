@@ -6,8 +6,12 @@ $(function(){
   $( ".ui-page" ).swipe( {
         swipeLeft:function(event, direction, distance, duration, fingerCount) {
             var numRand = Math.floor(Math.random() * 10001);
-            $('#mainImg').attr('src', flaskServ + '/next/skip/' +
-            numRand);
+            $('#mainImg').fadeTo(1000,0.30, function() {
+                $('#mainImg').attr('src', flaskServ + '/next/skip/' +
+                    numRand);
+            }).fadeTo(500,1);
+            return false;
+
         },
         swipeUp:function(event, direction, distance, duration, fingerCount) {
             var numRand = Math.floor(Math.random() * 10001);
