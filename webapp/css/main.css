@@ -5,13 +5,17 @@ body {
     background-color: black;
 }
 div.cover {
+    background-color: black;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+.ui-overlay-a {
+    background-color: black;
+}
 img.cover {
-  display: table-row;
-  object-fit: contain;
-  width: 100%;
-  height: 100vh;
+    display: table-row;
+    object-fit: contain;
+    width: 100%;
+    height: 100vh;
 }
