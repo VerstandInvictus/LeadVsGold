@@ -19,19 +19,17 @@ img.cover {
 .wrapper {
     text-align: center;
     position: absolute;
-    height: 10%;
     width: 100%;
     top: 75%;
     z-index: 10;
 }
 .floatbox {
-    display: inline-block;
-    width: 75px;
+    display: block;
     background-color: grey;
     color: white;
-    border-radius: 15px;
     padding:0px 5px 0px 5px;
-    font-size: 1.5vh;
+    height: 40px;
+    font-size: 3vh;
     margin: 0 auto;
 }
 #tapbox {
