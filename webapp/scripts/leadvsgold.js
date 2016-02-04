@@ -37,8 +37,7 @@ $(function(){
         },
   });
   $("#mainImg").swipe({
-        pinchIn:function(event, direction, distance, duration, fingerCount,
-            pinchZoom) {
+        doubleTap:function(event, target) {
             $.get(flaskServ + "/imgtap");
             $('.tapbox').html('<p>' + tapfolder + '</p>');
             $('.tapbox').css('background-color', tapcolor);
