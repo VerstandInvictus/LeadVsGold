@@ -19,26 +19,22 @@ img.cover {
 .wrapper {
     text-align: center;
 }
-.infobox {
+.floatbox {
     display: inline-block;
     position: absolute;
+    width: 75px;
+    text-align: center;
     background-color: grey;
     color: white;
     border-radius: 15px;
     padding:0px 5px 0px 5px;
-    top: 75%;
     font-size: 1vh;
     z-index: 10;
 }
-.tapbox {
-    display: inline-block;
-    position: absolute;
-    background-color: grey;
-    color: white;
-    border-radius: 15px;
-    padding:0px 5px 0px 5px;
+#tapbox {
+    top: 75%;
+}
+#actionbox {
     top: 85%;
-    font-size: 1vh;
-    z-index: 10;
 }
 
