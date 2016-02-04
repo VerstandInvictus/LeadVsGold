@@ -28,12 +28,21 @@ $(function(){
         },
         swipeUp:function(event, direction, distance, duration, fingerCount) {
             changeImage('/next/up/', upfolder, upcolor);
+            if (screenfull.enabled) {
+               screenfull.request();
+            };
         },
         swipeDown:function(event, direction, distance, duration, fingerCount) {
             changeImage('/next/down/', downfolder, downcolor);
+            if (screenfull.enabled) {
+               screenfull.request();
+            };
         },
         swipeRight:function(event, direction, distance, duration, fingerCount) {
             changeImage('/prev/', 'back', 'grey');
+            if (screenfull.enabled) {
+               screenfull.request();
+            };
         },
   });
   $(".ui-page").dblclick(function() {

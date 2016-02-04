@@ -26,7 +26,8 @@ img.cover {
     color: white;
     border-radius: 15px;
     padding:0px 5px 0px 5px;
-    top: 65%;
+    top: 75%;
+    font-size: 10vh;
     z-index: 10;
 }
 .tapbox {
@@ -36,7 +37,8 @@ img.cover {
     color: white;
     border-radius: 15px;
     padding:0px 5px 0px 5px;
-    top: 75%;
+    top: 85%;
+    font-size: 10vh;
     z-index: 10;
 }
 
