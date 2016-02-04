@@ -1,4 +1,6 @@
-screenfull.request();
+if (screenfull.enabled) {
+    screenfull.request();
+}
 var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
 $(".infobox").fadeTo(0,0);
