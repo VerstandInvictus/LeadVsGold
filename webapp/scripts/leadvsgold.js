@@ -1,6 +1,3 @@
-if (screenfull.enabled) {
-    screenfull.request();
-}
 var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
 $(".infobox").fadeTo(0,0);
@@ -24,6 +21,9 @@ $(function(){
   $( ".ui-page" ).swipe( {
         swipeLeft:function(event, direction, distance, duration, fingerCount) {
             changeImage('/next/skip/', 'skipped', 'grey');
+            if (screenfull.enabled) {
+               screenfull.request();
+            };
         },
         swipeUp:function(event, direction, distance, duration, fingerCount) {
             changeImage('/next/up/', upfolder, upcolor);
