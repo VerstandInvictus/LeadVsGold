@@ -36,12 +36,10 @@ $(function(){
             changeImage('/prev/', 'back', 'grey');
         },
   });
-  $("#mainImg").swipe({
-        doubleTap:function(event, target) {
-            $.get(flaskServ + "/imgtap");
-            $('.tapbox').html('<p>' + tapfolder + '</p>');
-            $('.tapbox').css('background-color', tapcolor);
-            $('.tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
-        }
+  $(".ui-page").dblclick(function() {
+        $.get(flaskServ + "/imgtap");
+        $('.tapbox').html('<p>' + tapfolder + '</p>');
+        $('.tapbox').css('background-color', tapcolor);
+        $('.tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
   });
 });
