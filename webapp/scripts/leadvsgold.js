@@ -3,7 +3,7 @@ var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 $(".infobox").fadeTo(0,0);
 $(".tapbox").fadeTo(0,0);
 
-$('#mainImg').attr('src', flaskServ + '/image/0')
+$('#mainImg').attr('src', flaskServ + '/image/0');
 
 function changeImage(actionUrl, infoText, infoColor) {
     var numRand = Math.floor(Math.random() * 10001);
@@ -16,7 +16,7 @@ function changeImage(actionUrl, infoText, infoColor) {
     $('.infobox').html('<p>' + infoText + '</p>');      // change infobox text
     $('.infobox').css('background-color', infoColor);   // change infobox color
     $('.infobox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0); // infobox fade
-};
+}
 
 $(function(){
   $( ".ui-page" ).swipe( {
