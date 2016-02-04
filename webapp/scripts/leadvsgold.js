@@ -1,6 +1,7 @@
 var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
 $(".infobox").fadeTo(0,0);
+$(".tapbox").fadeTo(0,0);
 
 $('#mainImg').attr('src', flaskServ + '/image/0')
 
@@ -34,12 +35,14 @@ $(function(){
         swipeRight:function(event, direction, distance, duration, fingerCount) {
             changeImage('/prev/', 'back', 'grey');
         },
+  });
+  $("#mainImg").swipe({
         pinchIn:function(event, direction, distance, duration, fingerCount,
             pinchZoom) {
-                $.get(flaskServ + "/imgtap");
-                $('.tapbox').html('<p>' + tapfolder + '</p>');
-                $('.tapbox').css('background-color', tapcolor);
-                $('.tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
+            $.get(flaskServ + "/imgtap");
+            $('.tapbox').html('<p>' + tapfolder + '</p>');
+            $('.tapbox').css('background-color', tapcolor);
+            $('.tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
         }
   });
 });
