@@ -6,15 +6,16 @@ $('#mainImg').attr('src', flaskServ + '/image/0')
 
 function changeImage(actionUrl, infoText, infoColor) {
     var numRand = Math.floor(Math.random() * 10001);
-    $('#mainImg').fadeTo(350, 0);
-    $('#mainImg').attr('src', '');
-    $('#mainImg').attr('src', flaskServ + actionUrl +
-            numRand);
-    $('#mainImg').fadeTo(350, 1);
-    $('.infobox').html('<p>' + infoText + '</p>');
-    $('.infobox').css('background-color', infoColor);
-    $('.infobox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
-}
+    $('#mainImg').fadeTo(350, 0, function() {
+        $('#mainImg').attr('src', flaskServ + actionUrl + numRand);
+    });
+    $('#mainImg').load(function() {
+        $('#mainImg').fadeTo(350, 1);      // fade in new
+    });
+    $('.infobox').html('<p>' + infoText + '</p>');      // change infobox text
+    $('.infobox').css('background-color', infoColor);   // change infobox color
+    $('.infobox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0); // infobox fade
+};
 
 $(function(){
   $( ".ui-page" ).swipe( {
@@ -31,4 +32,4 @@ $(function(){
             changeImage('/prev/', 'back', 'grey');
         }
   });
-})
+});
