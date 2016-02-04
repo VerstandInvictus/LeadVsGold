@@ -65,6 +65,7 @@ class fileList(object):
             up=os.path.join(self.outputFolder, config.upfolder),
             down=os.path.join(self.outputFolder, config.downfolder),
             skip=os.path.join(self.outputFolder, "skipped"),
+            tap=os.path.join(self.outputFolder, config.tapfolder)
         )
         self.stackQueue = list()
         self.noneObject = fileObject('nomore.png', 'webapp\\img\\nomore.png')
@@ -110,6 +111,15 @@ def skipForward(action, nonce):
         fl.updateLocation(fl.index, newPath)
     fl.incrementIndex(1)
     return send_file(fl.getCurFile().location)
+
+
+@app.route('/imgtap')
+@crossdomain(origin='*')
+def tapAction():
+    curFile = fl.getCurFile()
+    newPath = os.path.join(fl.actions['tap'], curFile.name)
+    shutil.copy2(curFile.location, newPath)
+    return "OK", 200
 
 
 @app.route('/prev/<nonce>')

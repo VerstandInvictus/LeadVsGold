@@ -19,6 +19,7 @@ function changeImage(actionUrl, infoText, infoColor) {
 
 $(function(){
   $( ".ui-page" ).swipe( {
+        allowPageScroll:"vertical",
         swipeLeft:function(event, direction, distance, duration, fingerCount) {
             changeImage('/next/skip/', 'skipped', 'grey');
         },
@@ -30,6 +31,13 @@ $(function(){
         },
         swipeRight:function(event, direction, distance, duration, fingerCount) {
             changeImage('/prev/', 'back', 'grey');
+        },
+        pinchIn:function(event, direction, distance, duration, fingerCount,
+            pinchZoom) {
+                $.get(flaskServ + "/imgtap");
+                $('.tapbox').html('<p>' + tapfolder + '</p>');
+                $('.tapbox').css('background-color', tapcolor);
+                $('.tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
         }
   });
 });
