@@ -129,6 +129,21 @@ def skipBack(nonce):
     return send_file(fl.getCurFile().location)
 
 
+@app.route('/index/<nonce>')
+@crossdomain(origin='*')
+def sendIndex(nonce):
+    return fl.index
+
+
+@app.route('/folder/<nonce>')
+@crossdomain(origin="*")
+def sendFolder(nonce):
+    path = fl.getCurFile().location()
+    curfile = os.path.split(path)[0]
+    folder = os.path.split(curfile)[1]
+    return folder
+
+
 if __name__ == '__main__':
     fl = fileList()
     for each in fl.actions.itervalues():

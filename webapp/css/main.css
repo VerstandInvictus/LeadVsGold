@@ -20,8 +20,21 @@ img.cover {
     text-align: center;
     position: absolute;
     width: 100%;
-    top: 65%;
     z-index: 10;
+}
+#lowfloat {
+    top: 65%;
+}
+#hifloat {
+    top: 5%
+}
+.cornerbox {
+    display: block;
+    background-color: grey;
+    color: white;
+    font-size: 10px;
+    margin: 0 auto;
+    font-family: 'Lucida Console', 'Lucida Sans Typewriter', monaco, 'Bitstream Vera Sans Mono', monospace;
 }
 .floatbox {
     display: block;
@@ -37,4 +50,6 @@ img.cover {
 #actionbox {
     top: 50%;
 }
+
+.hibox
 
