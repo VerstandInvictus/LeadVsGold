@@ -1,9 +1,8 @@
-function updateStats() {
-    var numRand = Math.floor(Math.random() * 10001);
-    $.get(flaskServ + "/folder/" + numRand, function (data) {
+function updateStats(num) {
+    $.get(flaskServ + "/folder/" + num, function (data) {
         $("#curfolder").html(data);
     });
-    $.get(flaskServ + "/index/" + numRand, function (data) {
+    $.get(flaskServ + "/index/" + num, function (data) {
         $("#curindex").html(data);
     });
 }
@@ -15,7 +14,7 @@ function changeImage(actionUrl, infoText, infoColor) {
     });
     $('#mainImg').load(function() {
         $('#mainImg').fadeTo(350, 1, function() {
-            updateStats();
+            updateStats(numRand);
         });      // fade in new
     });
     $('#actionbox').html('<p>' + infoText + '</p>');      // change infobox text
@@ -26,7 +25,7 @@ function changeImage(actionUrl, infoText, infoColor) {
 var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
 $(".floatbox").fadeTo(0,0);
-updateStats();
+updateStats(0);
 $('#mainImg').attr('src', flaskServ + '/image/0');
 
 $(function(){
