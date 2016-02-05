@@ -1,4 +1,5 @@
 function updateStats(num) {
+    console.log("call running")
     $.get(flaskServ + "/folder/" + num, function (data) {
         $("#curfolder").html(data);
     });
@@ -9,11 +10,14 @@ function updateStats(num) {
 
 function changeImage(actionUrl, infoText, infoColor) {
     var numRand = Math.floor(Math.random() * 10001);
+    $('#mainImg').off("load");
     $('#mainImg').fadeTo(350, 0, function() {
         $('#mainImg').attr('src', flaskServ + actionUrl + numRand);
     });
     $('#mainImg').load(function() {
+        console.log("load callback for " + numRand)
         $('#mainImg').fadeTo(350, 1, function() {
+            console.log("called with " + numRand)
             updateStats(numRand);
         });      // fade in new
     });
