@@ -28,12 +28,20 @@ img.cover {
 #hifloat {
     top: 5%
 }
+.cornerbox p {
+    margin: 0;
+}
 .cornerbox {
+    float: left;
     display: block;
     background-color: grey;
     color: white;
     font-size: 10px;
-    margin: 0 auto;
+    margin: 0 auto 0 5%;
+    opacity: 50%;
+    width: 10%;
+    border: 2px solid #d8d8d8;
+    border-radius: 3px;
     font-family: 'Lucida Console', 'Lucida Sans Typewriter', monaco, 'Bitstream Vera Sans Mono', monospace;
 }
 .floatbox {

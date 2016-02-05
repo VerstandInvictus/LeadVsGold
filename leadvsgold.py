@@ -132,14 +132,14 @@ def skipBack(nonce):
 @app.route('/index/<nonce>')
 @crossdomain(origin='*')
 def sendIndex(nonce):
-    return fl.index
+    return str(fl.index)
 
 
 @app.route('/folder/<nonce>')
 @crossdomain(origin="*")
 def sendFolder(nonce):
-    path = fl.getCurFile().location()
-    curfile = os.path.split(path)[0]
+    npath = fl.getCurFile().location
+    curfile = os.path.split(npath)[0]
     folder = os.path.split(curfile)[1]
     return folder
 

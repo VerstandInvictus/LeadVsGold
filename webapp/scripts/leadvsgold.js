@@ -14,19 +14,20 @@ function changeImage(actionUrl, infoText, infoColor) {
         $('#mainImg').attr('src', flaskServ + actionUrl + numRand);
     });
     $('#mainImg').load(function() {
-        $('#mainImg').fadeTo(350, 1);      // fade in new
+        $('#mainImg').fadeTo(350, 1, function() {
+            updateStats();
+        });      // fade in new
     });
     $('#actionbox').html('<p>' + infoText + '</p>');      // change infobox text
     $('#actionbox').css('background-color', infoColor);   // change infobox color
-    $('#actionbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0); // infobox fade
-    updateStats();
+    $('#actionbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
 }
 
 var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
 $(".floatbox").fadeTo(0,0);
-$('#mainImg').attr('src', flaskServ + '/image/0');
 updateStats();
+$('#mainImg').attr('src', flaskServ + '/image/0');
 
 $(function(){
   $( ".ui-page" ).swipe( {
