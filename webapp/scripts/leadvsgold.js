@@ -1,10 +1,8 @@
 function updateStats(num) {
-    console.log("call running")
-    $.get(flaskServ + "/folder/" + num, function (data) {
-        $("#curfolder").html(data);
-    });
-    $.get(flaskServ + "/index/" + num, function (data) {
-        $("#curindex").html(data);
+    $.get(flaskServ + "/info/" + num, function (data) {
+        splitinfo = data.split(':')
+        $("#curfolder").html(splitinfo[0]);
+        $("#curindex").html(splitinfo[1]);
     });
 }
 

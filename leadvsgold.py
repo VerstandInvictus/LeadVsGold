@@ -60,7 +60,11 @@ class fileList(object):
     def __init__(self):
         self.stackFolder = os.path.join(os.getcwdu(), config.inputfolder)
         self.outputFolder = os.path.join(os.getcwdu(), "output")
-        self.stackFiles = os.listdir(self.stackFolder)
+        self.stackFiles = list()
+        for f in os.listdir(self.stackFolder):
+            if os.path.splitext(f)[1] in (
+                    ".jpg", ".jpeg", ".gif", ".png"):
+                self.stackFiles.append(f)
         self.actions = dict(
             up=os.path.join(self.outputFolder, config.upfolder),
             down=os.path.join(self.outputFolder, config.downfolder),
@@ -129,19 +133,14 @@ def skipBack(nonce):
     return send_file(fl.getCurFile().location)
 
 
-@app.route('/index/<nonce>')
-@crossdomain(origin='*')
-def sendIndex(nonce):
-    return str(fl.index)
-
-
-@app.route('/folder/<nonce>')
+@app.route('/info/<nonce>')
 @crossdomain(origin="*")
 def sendFolder(nonce):
     npath = fl.getCurFile().location
     curfile = os.path.split(npath)[0]
     folder = os.path.split(curfile)[1]
-    return folder
+    retstring = folder + ':' + str(fl.index)
+    return retstring
 
 
 if __name__ == '__main__':
