@@ -78,6 +78,7 @@ class fileList(object):
                 self.stackFolder, f))
             self.stackQueue.append(fileobj)
         self.index = 0
+        self.sessionIndex = 0
 
     def updateLocation(self, index, location):
         self.stackQueue[index].location = location
@@ -90,9 +91,17 @@ class fileList(object):
 
     def incrementIndex(self, num):
         self.index += num
+        self.sessionIndex += num
 
     def setIndex(self, num):
         self.index = num
+
+    def resetSession(self, num):
+        self.sessionIndex = num
+
+    @property
+    def itemsRemain(self):
+        return len(self.stackQueue[self.index:])
 
 
 @app.route('/image/<nonce>')
@@ -139,9 +148,19 @@ def sendFolder(nonce):
     npath = fl.getCurFile().location
     curfile = os.path.split(npath)[0]
     folder = os.path.split(curfile)[1]
-    retstring = folder + ':' + str(fl.index)
+    retstring = ":".join((
+        folder,
+        str(fl.index),
+        str(fl.sessionIndex),
+        str(fl.itemsRemain)))
     return retstring
 
+
+@app.route('/info/reset')
+@crossdomain(origin="*")
+def resetSession():
+    fl.resetSession(0)
+    return "OK", 200
 
 if __name__ == '__main__':
     fl = fileList()
