@@ -38,9 +38,10 @@ img.cover {
     padding 0 5px;
 }
 .cornerbox {
+    opacity: 0.5;
     float: left;
     display: block;
-    background-color: #006666;
+    background-color: #666699;
     color: #dadada;
     font-size: 25px;
     margin: 0 auto 0 5%;
@@ -64,6 +65,11 @@ img.cover {
 #actionbox {
     top: 50%;
 }
-
-.hibox
-
+@media (min-width: 401px) and (max-width: 800px) {
+    .cornerbox {
+        font-size 15px;
+    }
+    .cornercount {
+        font-size 10px;
+    }
+}
