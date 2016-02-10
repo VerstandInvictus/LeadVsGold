@@ -114,7 +114,7 @@ def resetSession(num):
 
 
 def itemsRemain():
-    return os.listdir(cfgDB['outputFolder']).len()
+    return len(os.listdir(cfgDB['outputFolder']))
 
 
 @app.route('/image/<nonce>')
