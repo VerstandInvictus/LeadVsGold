@@ -1,6 +1,6 @@
 import os
 import shutil
-import config
+import pymongo
 from datetime import timedelta
 from flask import Flask, send_file, make_response, request, current_app
 from functools import update_wrapper
@@ -49,122 +49,134 @@ def crossdomain(origin=None, methods=None, headers=None,
 app = Flask(__name__)
 
 
-class fileObject(object):
-    def __init__(self, name, location):
-        self.name=name
-        self.location=location
+client = pymongo.MongoClient()
+db = client.leadvsgold
+initdb = db.init
+fldb = db.fileList
+cfgDB = initdb.find_one({'_id': "initDict"})
 
 
-class fileList(object):
+def currentIndex():
+    return initdb.find_one({"_id": "index"})
 
-    def __init__(self):
-        self.stackFolder = os.path.join(os.getcwdu(), config.inputfolder)
-        self.outputFolder = os.path.join(os.getcwdu(), "output")
-        self.stackFiles = list()
-        for f in os.listdir(self.stackFolder):
-            if os.path.splitext(f)[1] in (
-                    ".jpg", ".jpeg", ".gif", ".png"):
-                self.stackFiles.append(f)
-        self.actions = dict(
-            up=os.path.join(self.outputFolder, config.upfolder),
-            down=os.path.join(self.outputFolder, config.downfolder),
-            skip=os.path.join(self.outputFolder, "skipped"),
-            tap=os.path.join(self.outputFolder, config.tapfolder)
-        )
-        self.stackQueue = list()
-        self.noneObject = fileObject('nomore.png', 'webapp\\img\\nomore.png')
-        for f in self.stackFiles:
-            fileobj = fileObject(f, os.path.join(
-                self.stackFolder, f))
-            self.stackQueue.append(fileobj)
-        self.index = 0
-        self.sessionIndex = 0
 
-    def updateLocation(self, index, location):
-        self.stackQueue[index].location = location
+def updateLocation(index, location):
+    fldb.update_one(
+        {"_id": index},
+        {
+            "$set": {
+                "location": location
+            }
+        }
+    )
 
-    def getCurFile(self):
-        try:
-            return self.stackQueue[self.index]
-        except IndexError:
-            return self.noneObject
 
-    def incrementIndex(self, num):
-        self.index += num
-        self.sessionIndex += num
+def getCurFile():
+    curFile = fldb.find_one({"_id": currentIndex()["batch"]})
+    if curFile is None:
+        return cfgDB["noneObject"]
+    else:
+        return curFile
 
-    def setIndex(self, num):
-        self.index = num
 
-    def resetSession(self, num):
-        self.sessionIndex = num
+def incrementIndex(num):
+    initdb.update_one(
+        {'_id': "index"},
+        {
+            "$set": {
+                "batch": currentIndex()["batch"] + num,
+                "session": currentIndex()["session"] + num
+            }
+        }
+    )
 
-    @property
-    def itemsRemain(self):
-        return len(self.stackQueue[self.index:])
+
+def setIndex(num):
+    initdb.update_one(
+        {'_id': "index"},
+        {
+            "$set": {
+                "batch": num,
+            }
+        }
+    )
+
+
+def resetSession(num):
+    initdb.update_one(
+        {'_id': "index"},
+        {
+            "$set": {
+                "session": num
+            }
+        }
+    )
+
+
+def itemsRemain():
+    return fldb.count()
 
 
 @app.route('/image/<nonce>')
 @crossdomain(origin='*')
 def showFile(nonce):
-    return send_file(fl.getCurFile().location)
+    return send_file(getCurFile()["location"])
 
 
 @app.route('/next/<action>/<nonce>')
 @crossdomain(origin='*')
 def skipForward(action, nonce):
-    curFile = fl.getCurFile()
-    if curFile == fl.noneObject:
-        fl.setIndex(0)
-        return send_file(fl.noneObject.location)
-    newPath = os.path.join(fl.actions[action], curFile.name)
-    if curFile.location != newPath:
-        shutil.copy2(curFile.location, newPath)
-        os.remove(curFile.location)
-        fl.updateLocation(fl.index, newPath)
-    fl.incrementIndex(1)
-    return send_file(fl.getCurFile().location)
+    curFile = getCurFile()
+    if curFile == cfgDB['noneObject']:
+        setIndex(0)
+        return send_file(cfgDB.noneObject["location"])
+    newPath = os.path.join(cfgDB['actions'][action], curFile["name"])
+    if curFile['location'] != newPath:
+        shutil.copy2(curFile['location'], newPath)
+        os.remove(curFile['location'])
+        updateLocation(currentIndex()['batch'], newPath)
+    incrementIndex(1)
+    return send_file(getCurFile()['location'])
 
 
 @app.route('/imgtap')
 @crossdomain(origin='*')
 def tapAction():
-    curFile = fl.getCurFile()
-    newPath = os.path.join(fl.actions['tap'], curFile.name)
-    shutil.copy2(curFile.location, newPath)
+    curFile = getCurFile()
+    newPath = os.path.join(cfgDB['actions']['tap'], curFile['name'])
+    shutil.copy2(curFile['location'], newPath)
     return "OK", 200
 
 
 @app.route('/prev/<nonce>')
 @crossdomain(origin='*')
 def skipBack(nonce):
-    fl.incrementIndex(-1)
-    return send_file(fl.getCurFile().location)
+    incrementIndex(-1)
+    return send_file(getCurFile()['location'])
 
 
 @app.route('/info/<nonce>')
 @crossdomain(origin="*")
 def sendFolder(nonce):
-    npath = fl.getCurFile().location
+    npath = getCurFile()['location']
     curfile = os.path.split(npath)[0]
     folder = os.path.split(curfile)[1]
     retstring = ":".join((
         folder,
-        str(fl.index),
-        str(fl.sessionIndex),
-        str(fl.itemsRemain)))
+        str(currentIndex()['batch']),
+        str(currentIndex()['session']),
+        str(itemsRemain())))
     return retstring
 
 
 @app.route('/info/reset')
 @crossdomain(origin="*")
 def resetSession():
-    fl.resetSession(0)
+    resetSession(0)
     return "OK", 200
 
 if __name__ == '__main__':
-    fl = fileList()
-    for each in fl.actions.itervalues():
+    for each in cfgDB['actions'].itervalues():
         if not os.path.exists(each):
             os.makedirs(each)
     app.run(host='0.0.0.0', debug=True)
