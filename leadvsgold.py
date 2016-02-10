@@ -114,7 +114,7 @@ def resetSession(num):
 
 
 def itemsRemain():
-    files = os.listdir(cfgDB['outputFolder'])
+    files = os.listdir(cfgDB['stackFolder'])
     print files
     return len(files)
 
