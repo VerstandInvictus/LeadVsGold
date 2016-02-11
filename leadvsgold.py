@@ -72,7 +72,9 @@ def resetSession(num):
 
 
 def itemsRemain():
-    return fldb.count()
+    files = os.listdir(cfgDB['stackFolder'])
+    print files
+    return len(files)
 
 
 @app.route('/image/<nonce>')
@@ -85,7 +87,7 @@ def skipForward(action, nonce):
     curFile = getCurFile()
     if curFile == cfgDB['noneObject']:
         setIndex(0)
-        return send_file(cfgDB.noneObject["location"])
+        return send_file(cfgDB['noneObject']["location"])
     newPath = os.path.join(cfgDB['actions'][action], curFile["name"])
     if curFile['location'] != newPath:
         shutil.copy2(curFile['location'], newPath)
