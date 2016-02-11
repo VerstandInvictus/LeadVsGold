@@ -6,8 +6,8 @@ client = pymongo.MongoClient()
 db = client.leadvsgold
 initdb = db.init
 fl = db.fileList
-outf = os.path.join(os.getcwdu(), "output")
-inf = os.path.join(os.getcwdu(), config.inputfolder)
+outf = os.path.join(os.getcwdu(), "webapp", "output")
+inf = os.path.join(os.getcwdu(), "webapp", config.inputfolder)
 stackFiles = list()
 for f in os.listdir(inf):
     if os.path.splitext(f)[1] in (

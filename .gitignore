@@ -9,10 +9,15 @@ __pycache__/
 *config*
 
 # output
-output/
+*output*
 /adaptive-images.php
 *ai-cache*
+*input*
+/output
+/input
 input/
+output/
+
 
 # C extensions
 *.so
