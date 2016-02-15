@@ -1,4 +1,5 @@
 open "aws linux box"
 cd /var/repos/LeadVsGold
-synchronize remote g:\pictures\stp\LeadVsGold -filemask="|.git/;output/;input/;.gitignore;.idea/;*.scp" -delete
+synchronize remote g:\pictures\stp\LeadVsGold -filemask="|.git/;output/;
+input/;.gitignore;.idea/;*.log;*.scp" -delete
 exit
