@@ -124,7 +124,7 @@ def sendFolder(nonce):
 
 
 @app.route('/info/reset')
-def resetSession():
+def tapInfobox():
     resetSession(0)
     return "OK", 200
 
