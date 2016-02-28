@@ -12,7 +12,7 @@ outf = os.path.join(os.getcwdu(), "webapp", "output")
 inf = os.path.join(os.getcwdu(), "webapp", config.inputfolder)
 stackFiles = list()
 fileList = [x for x in os.listdir(inf) if not os.path.isdir(x)]
-fileList.sort(key=lambda x: os.path.getmtime(x))
+fileList.sort(key=lambda x: os.path.getmtime(os.path.join(inf, x)))
 for f in fileList:
     if os.path.splitext(f)[1] in (
             ".jpg", ".jpeg", ".gif", ".png"):
