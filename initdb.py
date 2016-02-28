@@ -25,7 +25,9 @@ for f in stackFiles:
         creator = re.sub(',', ' /', creator)
     except AttributeError:
         creator = "No Creator"
-    mtime = arrow.get(os.path.getmtime(f)).format("M/D/YYYY")
+    mtime = arrow.get(
+        os.path.getmtime(
+            os.path.join(inf, f)).format("M/D/YYYY"))
     fileobj = dict(
         _id=count,
         name=f,
