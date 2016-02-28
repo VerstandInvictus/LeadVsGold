@@ -11,8 +11,11 @@ outf = os.path.join(os.getcwdu(), "webapp", "output")
 inf = os.path.join(os.getcwdu(), "webapp", config.inputfolder)
 stackFiles = list()
 fileList = filter(os.path.isfile, os.listdir(inf))
+print len(fileList)
 fileList = [os.path.join(inf, f) for f in fileList]
+print len(fileList)
 fileList.sort(key=lambda x: os.path.getmtime(x))
+print len(fileList)
 for f in fileList:
     print f
     if os.path.splitext(f)[1] in (
