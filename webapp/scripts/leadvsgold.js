@@ -79,9 +79,6 @@ $( document ).ready(function() {
             default: return;
         }
         e.preventDefault();
-        if (screenfull.enabled) {
-           screenfull.request();
-        };
     });
     $(".ui-page").dblclick(function() {
         $.get(flaskServ + "/imgtap");
