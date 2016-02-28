@@ -60,13 +60,13 @@ $( document ).ready(function() {
     $( document ).keydown(function(e) {
         switch(e.which) {
             case 37:
-                changeImage('/next/skip/', 'skipped', 'grey');
+                changeImage('/prev/', 'back', 'grey');
                 break;
             case 38:
                 changeImage('/next/up/', upfolder, upcolor);
                 break;
             case 39:
-                changeImage('/prev/', 'back', 'grey');
+                changeImage('/next/skip/', 'skipped', 'grey');
                 break;
             case 40:
                 changeImage('/next/down/', downfolder, downcolor);
