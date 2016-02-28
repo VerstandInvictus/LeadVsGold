@@ -12,7 +12,7 @@ outf = os.path.join(os.getcwdu(), "webapp", "output")
 inf = os.path.join(os.getcwdu(), "webapp", config.inputfolder)
 stackFiles = list()
 fileList = [x for x in os.listdir(inf) if not os.path.isdir(x)]
-fileList.sort(key=lambda x: os.path.getmtime(os.path.join(inf, x)))
+fileList.sort(key=lambda x: os.path.getmtime(os.path.join(inf, x))).reverse()
 print "{0} files processed into DB.".format(len(fileList))
 for f in fileList:
     if os.path.splitext(f)[1] in (
