@@ -14,6 +14,7 @@ fileList = filter(os.path.isfile, os.listdir(inf))
 fileList = [os.path.join(inf, f) for f in fileList]
 fileList.sort(key=lambda x: os.path.getmtime(x))
 for f in fileList:
+    print f
     if os.path.splitext(f)[1] in (
             ".jpg", ".jpeg", ".gif", ".png"):
         stackFiles.append(f)
