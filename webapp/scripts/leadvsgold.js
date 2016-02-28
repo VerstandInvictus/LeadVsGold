@@ -30,7 +30,7 @@ var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
 $( document ).ready(function() {
     $(".floatbox").fadeTo(0,0);
-    updateStats(0);
+    updateStats(42);
     $('#mainImg').attr('src', flaskServ + '/image/0');
     $( ".ui-page" ).swipe( {
         swipeLeft:function(event, direction, distance, duration, fingerCount) {
