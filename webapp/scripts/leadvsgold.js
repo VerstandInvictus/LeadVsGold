@@ -77,7 +77,7 @@ $( document ).ready(function() {
         if (screenfull.enabled) {
            screenfull.request();
         };
-    });,
+    });
     $(".ui-page").dblclick(function() {
         $.get(flaskServ + "/imgtap");
         $('#tapbox').html('<p>' + tapfolder + '</p>');
