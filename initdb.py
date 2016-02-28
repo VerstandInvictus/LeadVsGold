@@ -27,7 +27,7 @@ for f in stackFiles:
         creator = "No Creator"
     mtime = arrow.get(
         os.path.getmtime(
-            os.path.join(inf, f)).format("M/D/YYYY"))
+            os.path.join(inf, f))).format("M/D/YYYY")
     fileobj = dict(
         _id=count,
         name=f,
