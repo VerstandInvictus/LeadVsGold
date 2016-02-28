@@ -2,6 +2,7 @@ import re
 import os
 import config
 import pymongo
+import arrow
 
 client = pymongo.MongoClient()
 db = client.leadvsgold
@@ -26,11 +27,13 @@ for f in stackFiles:
         creator = re.sub(',', ' /', creator)
     except AttributeError:
         creator = "No Creator"
+    mtime = arrow.get(os.path.getmtime(f)).format("M/D/YYYY")
     fileobj = dict(
         _id=count,
         name=f,
         location=os.path.join(inf, f),
-        creator=creator)
+        creator=creator,
+        mtime=mtime)
     stackQueue.append(fileobj)
     count += 1
 initDict = dict(

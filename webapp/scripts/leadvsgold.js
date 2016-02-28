@@ -6,6 +6,7 @@ function updateStats(num) {
         $("#curindex").html(splitinfo[2]);
         $("#cursession").html(splitinfo[3]);
         $("#curremain").html(splitinfo[4]);
+        $("#curdate").html(splitinfo[5]);
     });
 }
 

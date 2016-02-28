@@ -112,16 +112,20 @@ def skipBack(nonce):
 
 @app.route('/info/<nonce>')
 def sendFolder(nonce):
-    npath = getCurFile()['location']
+    f = getCurFile()
+    npath = f['location']
     curfile = os.path.split(npath)[0]
     folder = os.path.split(curfile)[1]
-    creator = getCurFile()['creator']
+    creator = f['creator']
+    mtime = f['mtime']
     retstring = ":".join((
         folder,
         creator,
         str(currentIndex()['batch']),
         str(currentIndex()['session']),
-        str(itemsRemain())))
+        str(itemsRemain()),
+        mtime
+    ))
     return retstring
 
 
