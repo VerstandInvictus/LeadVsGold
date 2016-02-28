@@ -73,6 +73,7 @@ $( document ).ready(function() {
                 changeImage('/next/down/', downfolder, downcolor);
                 break;
             case 32:
+            case 35:
                 $.get(flaskServ + "/imgtap");
                 $('#tapbox').html('<p>' + tapfolder + '</p>');
                 $('#tapbox').css('background-color', tapcolor);
