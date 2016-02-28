@@ -1,3 +1,4 @@
+import re
 import os
 import config
 import pymongo
@@ -9,17 +10,26 @@ fl = db.fileList
 outf = os.path.join(os.getcwdu(), "webapp", "output")
 inf = os.path.join(os.getcwdu(), "webapp", config.inputfolder)
 stackFiles = list()
-for f in os.listdir(inf):
+fileList = filter(os.path.isfile, os.listdir(inf))
+fileList = [os.path.join(inf, f) for f in fileList]
+fileList.sort(key=lambda x: os.path.getmtime(x))
+for f in fileList:
     if os.path.splitext(f)[1] in (
             ".jpg", ".jpeg", ".gif", ".png"):
         stackFiles.append(f)
 count = 1
 stackQueue = list()
 for f in stackFiles:
+    try:
+        creator = re.search('__(.+?)__', f).group(1)
+        creator = re.sub(',', ' /', creator)
+    except AttributeError:
+        creator = "No Creator"
     fileobj = dict(
         _id=count,
         name=f,
-        location=os.path.join(inf, f))
+        location=os.path.join(inf, f),
+        creator=creator)
     stackQueue.append(fileobj)
     count += 1
 initDict = dict(

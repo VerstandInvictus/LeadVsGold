@@ -2,9 +2,10 @@ function updateStats(num) {
     $.get(flaskServ + "/info/" + num, function (data) {
         splitinfo = data.split(':')
         $("#curfolder").html(splitinfo[0]);
-        $("#curindex").html(splitinfo[1]);
-        $("#cursession").html(splitinfo[2]);
-        $("#curremain").html(splitinfo[3]);
+        $("#curcreator").html(splitinfo[1]);
+        $("#curindex").html(splitinfo[2]);
+        $("#cursession").html(splitinfo[3]);
+        $("#curremain").html(splitinfo[4]);
     });
 }
 

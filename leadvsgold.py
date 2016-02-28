@@ -115,8 +115,10 @@ def sendFolder(nonce):
     npath = getCurFile()['location']
     curfile = os.path.split(npath)[0]
     folder = os.path.split(curfile)[1]
+    creator = getCurFile()['creator']
     retstring = ":".join((
         folder,
+        creator,
         str(currentIndex()['batch']),
         str(currentIndex()['session']),
         str(itemsRemain())))
