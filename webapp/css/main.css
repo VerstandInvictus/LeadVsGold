@@ -43,33 +43,40 @@ img.cover {
     display: block;
     background-color: #666699;
     color: #dadada;
-    font-size: 25px;
+    font-size: 90%;
     margin: 0 auto 0 5%;
     padding: 0 5px;
     border: 2px outset #dadada;
     border-radius: 3px;
 }
 .cornercount {
-    font-size: 15px;
+    font-size: 70%;
 }
 .floatbox {
     display: block;
     background-color: grey;
     color: white;
-    font-size: 30px;
+    font-size: 200%;
     margin: 0 auto;
 }
 #tapbox {
     top: 0%;
 }
 #actionbox {
-    top: 50%;
+    top: 65%;
 }
-@media (min-width: 401px) and (max-width: 800px) {
+
+@media (min-device-width: 750px) {
     .cornerbox {
-        font-size 15px;
+        font-size: 150%;
     }
-    .cornercount {
-        font-size 10px;
+    .floatbox {
+        font-size: 250%;
+    }
+}
+
+@media (max-device-width: 700px) and (orientation: landscape) {
+    #lowfloat {
+        top: 175px;
     }
 }
