@@ -54,7 +54,7 @@ indexes = dict(
     _id="index",
     batch=1,
     session=1,)
-for folder in initDict['actions'].iteralues():
+for folder in initDict['actions'].itervalues():
     if not os.path.exists(folder):
         os.makedirs(folder)
 fl.drop()
