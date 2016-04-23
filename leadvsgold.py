@@ -9,17 +9,25 @@ CORS(app)
 
 client = pymongo.MongoClient()
 db = client.leadvsgold
-initdb = db.init
-fldb = db.fileList
-cfgDB = initdb.find_one({'_id': "initDict"})
 
 
-def currentIndex():
-    return initdb.find_one({"_id": "index"})
+def dbHandles(dbname, whichdb):
+    initdbn = "init" + dbname
+    fldbn = 'fileList' + dbname
+    if whichdb == "fldb":
+        return db[fldbn]
+    if whichdb == "initdb":
+        return db[initdbn]
+    if whichdb == "cfgdb":
+        return db[initdbn].find_one({'_id': "initDict"})
 
 
-def updateLocation(index, location):
-    fldb.update_one(
+def currentIndex(dbname):
+    return dbHandles(dbname, 'initdb').find_one({"_id": "index"})
+
+
+def updateLocation(index, location, dbname):
+    dbHandles(dbname, 'fldb').update_one(
         {"_id": index},
         {
             "$set": {
@@ -29,28 +37,29 @@ def updateLocation(index, location):
     )
 
 
-def getCurFile():
-    curFile = fldb.find_one({"_id": currentIndex()["batch"]})
+def getCurFile(dbname):
+    curFile = dbHandles(dbname, 'fldb').find_one(
+        {"_id": currentIndex(dbname)["batch"]})
     if curFile is None:
-        return cfgDB["noneObject"]
+        return dbHandles(dbname, 'cfgdb')["noneObject"]
     else:
         return curFile
 
 
-def incrementIndex(num):
-    initdb.update_one(
+def incrementIndex(num, dbname):
+    dbHandles(dbname, 'initdb').update_one(
         {'_id': "index"},
         {
             "$set": {
-                "batch": currentIndex()["batch"] + num,
-                "session": currentIndex()["session"] + num
+                "batch": currentIndex(dbname)["batch"] + num,
+                "session": currentIndex(dbname)["session"] + num
             }
         }
     )
 
 
-def setIndex(num):
-    initdb.update_one(
+def setIndex(num, dbname):
+    dbHandles(dbname, 'initdb').update_one(
         {'_id': "index"},
         {
             "$set": {
@@ -60,8 +69,8 @@ def setIndex(num):
     )
 
 
-def resetSession(num):
-    initdb.update_one(
+def resetSession(num, dbname):
+    dbHandles(dbname, 'initdb').update_one(
         {'_id': "index"},
         {
             "$set": {
@@ -71,48 +80,50 @@ def resetSession(num):
     )
 
 
-def itemsRemain():
-    files = os.listdir(cfgDB['stackFolder'])
+def itemsRemain(dbname):
+    files = os.listdir(dbHandles(dbname, 'cfgdb')['stackFolder'])
     return len(files)
 
 
-@app.route('/image/<nonce>')
-def showFile(nonce):
-    return send_file(getCurFile()["location"])
+@app.route('/<dbname>/image/<nonce>')
+def showFile(nonce, dbname):
+    return send_file(getCurFile(dbname)["location"])
 
 
-@app.route('/next/<action>/<nonce>')
-def skipForward(action, nonce):
-    curFile = getCurFile()
-    if curFile == cfgDB['noneObject']:
-        setIndex(0)
-        return send_file(cfgDB['noneObject']["location"])
-    newPath = os.path.join(cfgDB['actions'][action], curFile["name"])
+@app.route('/<dbname>/next/<action>/<nonce>')
+def skipForward(action, nonce, dbname):
+    curFile = getCurFile(dbname)
+    if curFile == dbHandles(dbname, 'cfgdb')['noneObject']:
+        setIndex(0, dbname)
+        return send_file(dbHandles(dbname, 'cfgdb')['noneObject']["location"])
+    newPath = os.path.join(dbHandles(
+        dbname, 'cfgdb')['actions'][action], curFile["name"])
     if curFile['location'] != newPath:
         shutil.copy2(curFile['location'], newPath)
         os.remove(curFile['location'])
-        updateLocation(currentIndex()['batch'], newPath)
-    incrementIndex(1)
-    return send_file(getCurFile()['location'])
+        updateLocation(currentIndex(dbname)['batch'], newPath, dbname)
+    incrementIndex(1, dbname)
+    return send_file(getCurFile(dbname)['location'])
 
 
-@app.route('/imgtap')
-def tapAction():
-    curFile = getCurFile()
-    newPath = os.path.join(cfgDB['actions']['tap'], curFile['name'])
+@app.route('/<dbname>/imgtap')
+def tapAction(dbname):
+    curFile = getCurFile(dbname)
+    newPath = os.path.join(dbHandles(
+        dbname, 'cfgdb')['actions']['tap'], curFile['name'])
     shutil.copy2(curFile['location'], newPath)
     return "OK", 200
 
 
-@app.route('/prev/<nonce>')
-def skipBack(nonce):
-    incrementIndex(-1)
-    return send_file(getCurFile()['location'])
+@app.route('/<dbname>/prev/<nonce>')
+def skipBack(nonce, dbname):
+    incrementIndex(-1, dbname)
+    return send_file(getCurFile(dbname)['location'])
 
 
-@app.route('/info/<nonce>')
-def sendFolder(nonce):
-    f = getCurFile()
+@app.route('<dbname>/info/<nonce>')
+def sendFolder(nonce, dbname):
+    f = getCurFile(dbname)
     npath = f['location']
     curfile = os.path.split(npath)[0]
     folder = os.path.split(curfile)[1]
@@ -121,21 +132,18 @@ def sendFolder(nonce):
     retstring = ":".join((
         folder,
         creator,
-        str(currentIndex()['batch']),
-        str(currentIndex()['session']),
-        str(itemsRemain()),
+        str(currentIndex(dbname)['batch']),
+        str(currentIndex(dbname)['session']),
+        str(itemsRemain(dbname)),
         mtime
     ))
     return retstring
 
 
-@app.route('/info/reset')
-def tapInfobox():
-    resetSession(0)
+@app.route('<dbname>/info/reset')
+def tapInfobox(dbname):
+    resetSession(0, dbname)
     return "OK", 200
 
 if __name__ == '__main__':
-    for each in cfgDB['actions'].itervalues():
-        if not os.path.exists(each):
-            os.makedirs(each)
     app.run(host='0.0.0.0', debug=True)

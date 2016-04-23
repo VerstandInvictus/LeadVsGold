@@ -6,8 +6,10 @@ import arrow
 
 client = pymongo.MongoClient()
 db = client.leadvsgold
-initdb = db.init
-fl = db.fileList
+initdbn = "init" + config.dbname
+fldbn = 'fileList' + config.dbname
+initdb = db[initdbn]
+fl = db[fldbn]
 outf = os.path.join(os.getcwdu(), "webapp", "output")
 inf = os.path.join(os.getcwdu(), "webapp", config.inputfolder)
 stackFiles = list()
@@ -56,6 +58,9 @@ indexes = dict(
     session=1,)
 fl.drop()
 initdb.drop()
+for each in initDict['actions'].itervalues():
+    if not os.path.exists(each):
+        os.makedirs(each)
 initdb.insert_one(initDict)
 fl.insert_many(stackQueue)
 initdb.insert_one(indexes)
