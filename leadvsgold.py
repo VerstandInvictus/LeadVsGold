@@ -20,10 +20,7 @@ def jsonWrapper(inputStructure, isCursor=1):
         outval = list(inputStructure)
     else:
         outval = inputStructure
-    resp = Response(
-        json.dumps(outval, indent=indent),
-        mimetype='application/json')
-    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp = json.dumps(outval, indent=indent)
     return resp
 
 
