@@ -20,8 +20,9 @@ def jsonWrapper(inputStructure, isCursor=1):
         outval = list(inputStructure)
     else:
         outval = inputStructure
-    resp = json.dumps(outval, indent=indent)
-    return resp
+    return Response(
+        json.dumps(outval, indent=indent),
+        mimetype='application/json')
 
 
 def dbHandles(dbname, whichdb):
@@ -100,7 +101,7 @@ def itemsRemain(dbname):
 
 @app.route('/folders')
 def getFolders():
-    return db.folders.find_one()['folders']
+    return jsonWrapper(db.folders.find_one()['folders'], isCursor=0)
 
 
 @app.route('/<dbname>/image/<nonce>')
