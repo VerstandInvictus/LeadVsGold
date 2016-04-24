@@ -11,7 +11,7 @@ function updateStats(num) {
 }
 
 function changeImage(actionUrl, infoText, infoColor) {
-    var numRand = Math.floor(Math.random() * 10001);
+    var numRand = Math.floor(Math.random() * 100001);
     $('#mainImg').off("load");
     $('#mainImg').fadeTo(350, 0, function() {
         $('#mainImg').attr('src', flaskServ + '/' + dbname + actionUrl + numRand);
@@ -30,8 +30,9 @@ var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
 $( document ).ready(function() {
     $(".floatbox").fadeTo(0,0);
-    updateStats(42);
-    $('#mainImg').attr('src', flaskServ + '/' + dbname + '/image/0');
+    var numRand = Math.floor(Math.random() * 100001);
+    updateStats(numRand);
+    $('#mainImg').attr('src', flaskServ + '/' + dbname + '/image/' + numRand);
     $( ".ui-page" ).swipe( {
         swipeLeft:function(event, direction, distance, duration, fingerCount) {
             changeImage('/next/skip/', 'skipped', 'grey');
