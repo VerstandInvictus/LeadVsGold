@@ -1,5 +1,5 @@
 function updateStats(num) {
-    $.get(flaskServ + "/info/" + '/' + dbname + '/' + num, function (data) {
+    $.get(flaskServ + "/info/" + dbname + '/' + num, function (data) {
         splitinfo = data.split(':')
         $("#curfolder").html(splitinfo[0]);
         $("#curcreator").html(splitinfo[1]);
@@ -14,7 +14,7 @@ function changeImage(actionUrl, infoText, infoColor) {
     var numRand = Math.floor(Math.random() * 10001);
     $('#mainImg').off("load");
     $('#mainImg').fadeTo(350, 0, function() {
-        $('#mainImg').attr('src', flaskServ + '/' + dbname + '/' + actionUrl + numRand);
+        $('#mainImg').attr('src', flaskServ + '/' + dbname + actionUrl + numRand);
     });
     $('#mainImg').load(function() {
         $('#mainImg').fadeTo(350, 1, function() {
@@ -31,7 +31,7 @@ var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 $( document ).ready(function() {
     $(".floatbox").fadeTo(0,0);
     updateStats(42);
-    $('#mainImg').attr('src', flaskServ + '/image/0');
+    $('#mainImg').attr('src', flaskServ + '/' + dbname + '/image/0');
     $( ".ui-page" ).swipe( {
         swipeLeft:function(event, direction, distance, duration, fingerCount) {
             changeImage('/next/skip/', 'skipped', 'grey');
@@ -74,7 +74,7 @@ $( document ).ready(function() {
                 break;
             case 32:
             case 35:
-                $.get(flaskServ + '/' + dbname + '/' + "/imgtap");
+                $.get(flaskServ + '/' + dbname + "/imgtap");
                 $('#tapbox').html('<p>' + tapfolder + '</p>');
                 $('#tapbox').css('background-color', tapcolor);
                 $('#tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
@@ -83,13 +83,13 @@ $( document ).ready(function() {
         e.preventDefault();
     });
     $(".ui-page").dblclick(function() {
-        $.get(flaskServ + '/' + dbname + '/' + "/imgtap");
+        $.get(flaskServ + '/' + dbname + "/imgtap");
         $('#tapbox').html('<p>' + tapfolder + '</p>');
         $('#tapbox').css('background-color', tapcolor);
         $('#tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
     });
     $(".cornerbox").click(function() {
-        $.get(flaskServ + '/' + dbname + '/' + "/info/reset");
+        $.get(flaskServ + '/' + dbname + "/info/reset");
         updateStats(78);
     })
 });
