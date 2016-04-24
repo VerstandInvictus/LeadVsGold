@@ -100,7 +100,7 @@ def itemsRemain(dbname):
 
 @app.route('/folders')
 def getFolders():
-    return db.folders.find_one()
+    return db.folders.find_one()['folders']
 
 
 @app.route('/<dbname>/image/<nonce>')
