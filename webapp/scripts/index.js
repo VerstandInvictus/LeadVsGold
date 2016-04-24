@@ -3,8 +3,8 @@ var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
 $get(flaskServ + '/folders', function(data) {
     $.each(data, function (index, value) {
-        var string = '<p class="submit purple"><a href="folders/
-        + value + '">' + value + '</a></p><br>'
+        var string = '<p class="submit purple"><a href="folders/' +
+        value + '">' + value + '</a></p><br>';
         $("#selections").append(string);
     }
 })
