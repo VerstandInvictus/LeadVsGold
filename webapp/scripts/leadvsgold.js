@@ -1,5 +1,5 @@
 function updateStats(num) {
-    $.get(flaskServ + "/info/" + dbname + '/' + num, function (data) {
+    $.get(flaskServ + '/' + dbname + "/info/" + num, function (data) {
         splitinfo = data.split(':')
         $("#curfolder").html(splitinfo[0]);
         $("#curcreator").html(splitinfo[1]);
