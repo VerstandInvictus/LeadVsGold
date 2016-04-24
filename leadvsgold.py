@@ -100,7 +100,7 @@ def itemsRemain(dbname):
 
 @app.route('/folders')
 def getFolders():
-    return jsonWrapper(db.folders.find_one(), isCursor=0)
+    return db.folders.find_one()
 
 
 @app.route('/<dbname>/image/<nonce>')
