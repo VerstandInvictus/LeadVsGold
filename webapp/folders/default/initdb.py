@@ -1,8 +1,8 @@
-import re
 import os
-import config
-import pymongo
+import re
 import arrow
+import pymongo
+import config
 
 client = pymongo.MongoClient()
 db = client.leadvsgold
@@ -10,8 +10,8 @@ initdbn = "init" + config.dbname
 fldbn = 'fileList' + config.dbname
 initdb = db[initdbn]
 fl = db[fldbn]
-outf = os.path.join(os.getcwdu(), "webapp", "output")
-inf = os.path.join(os.getcwdu(), "webapp", config.inputfolder)
+outf = os.path.join(os.getcwdu(), "output")
+inf = os.path.join(os.getcwdu(), config.inputfolder)
 stackFiles = list()
 fileList = [x for x in os.listdir(inf) if not os.path.isdir(x)]
 fileList.sort(key=lambda x: os.path.getmtime(os.path.join(inf, x)))
