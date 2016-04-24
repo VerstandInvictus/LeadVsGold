@@ -6,5 +6,5 @@ $get(flaskServ + '/folders', function(data) {
         var string = '<p class="submit purple"><a href="folders/' +
         value + '">' + value + '</a></p><br>';
         $("#selections").append(string);
-    }
+    })
 })
