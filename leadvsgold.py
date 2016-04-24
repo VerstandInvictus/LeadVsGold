@@ -1,7 +1,7 @@
 import os
 import shutil
 import pymongo
-from flask import Flask, send_file
+from flask import Flask, send_file, request, Response, json
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -9,6 +9,20 @@ CORS(app)
 
 client = pymongo.MongoClient()
 db = client.leadvsgold
+
+
+def jsonWrapper(inputStructure, isCursor=1):
+    if not request.is_xhr:
+        indent = 4
+    else:
+        indent = None
+    if isCursor == 1:
+        outval = list(inputStructure)
+    else:
+        outval = inputStructure
+    return Response(
+        json.dumps(outval, indent=indent),
+        mimetype='application/json')
 
 
 def dbHandles(dbname, whichdb):
@@ -83,6 +97,11 @@ def resetSession(num, dbname):
 def itemsRemain(dbname):
     files = os.listdir(dbHandles(dbname, 'cfgdb')['stackFolder'])
     return len(files)
+
+
+@app.route('/folders')
+def getFolders():
+    return jsonWrapper(db.folders.find_one(), isCursor=0)
 
 
 @app.route('/<dbname>/image/<nonce>')
