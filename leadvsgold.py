@@ -20,9 +20,11 @@ def jsonWrapper(inputStructure, isCursor=1):
         outval = list(inputStructure)
     else:
         outval = inputStructure
-    return Response(
+    resp = Response(
         json.dumps(outval, indent=indent),
         mimetype='application/json')
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
 
 
 def dbHandles(dbname, whichdb):
