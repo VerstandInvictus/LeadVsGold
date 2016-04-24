@@ -121,7 +121,7 @@ def skipBack(nonce, dbname):
     return send_file(getCurFile(dbname)['location'])
 
 
-@app.route('<dbname>/info/<nonce>')
+@app.route('/<dbname>/info/<nonce>')
 def sendFolder(nonce, dbname):
     f = getCurFile(dbname)
     npath = f['location']
@@ -140,7 +140,7 @@ def sendFolder(nonce, dbname):
     return retstring
 
 
-@app.route('<dbname>/info/reset')
+@app.route('/<dbname>/info/reset')
 def tapInfobox(dbname):
     resetSession(0, dbname)
     return "OK", 200
