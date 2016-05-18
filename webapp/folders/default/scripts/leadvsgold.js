@@ -31,10 +31,10 @@ function changeImage(argsobj) {
 
 var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
-upact = '/next/up/', upfolder, upcolor;
-downact = '/next/down/', downfolder, downcolor;
-leftact = '/next/skip/', 'skipped', 'grey';
-rightact = '/prev/', 'back', 'grey';
+upact = ['/next/up/', upfolder, upcolor];
+downact = ['/next/down/', downfolder, downcolor];
+leftact = ['/next/skip/', 'skipped', 'grey'];
+rightact = ['/prev/', 'back', 'grey'];
 
 // the gear VR's touchpad is logically flipped from UDLR on a screen
 // if we detect Samsung Internet, flip axes for input
