@@ -54,7 +54,8 @@ img.cover {
 }
 #rightcornerbox {
     float: right;
-    font-size: 150%;
+    font-size: 300%;
+    margin-left: 95%;
 }
 .floatbox {
     display: block;
@@ -76,6 +77,9 @@ img.cover {
     }
     .floatbox {
         font-size: 250%;
+    }
+    #rightcornerbox {
+        font-size: 300%;
     }
 }
 
