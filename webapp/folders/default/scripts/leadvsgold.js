@@ -36,56 +36,62 @@ downact = ['/next/down/', downfolder, downcolor];
 leftact = ['/next/skip/', 'skipped', 'grey'];
 rightact = ['/prev/', 'back', 'grey'];
 
-// the gear VR's touchpad is logically flipped from UDLR on a screen
-// if we detect Samsung Internet, flip axes for input
-if ((navigator.userAgent.indexOf('SamsungBrowser') != -1)) {
-    upaction = downact;
-    downaction = upact;
-    leftaction = rightact;
-    rightaction = leftact;
-    // cataction = dogact;
-    // eastaction = westact;
-    // ukaction = anarchy;
-    console.log('detected Gear VR');
-}
-else {
-    upaction = upact;
-    downaction = downact;
-    leftaction = leftact;
-    rightaction = rightact;
-}
 
 $( document ).ready(function() {
     $(".floatbox").fadeTo(0,0);
     var numRand = Math.floor(Math.random() * 100001);
     updateStats(numRand);
     $('#mainImg').attr('src', flaskServ + '/' + dbname + '/image/' + numRand);
-    $( ".ui-page" ).swipe( {
-        swipeLeft:function(event, direction, distance, duration, fingerCount) {
-            changeImage(leftaction);
-            if (screenfull.enabled) {
-               screenfull.request();
-            };
-        },
-        swipeUp:function(event, direction, distance, duration, fingerCount) {
-            changeImage(upaction);
-            if (screenfull.enabled) {
-               screenfull.request();
-            };
-        },
-        swipeDown:function(event, direction, distance, duration, fingerCount) {
-            changeImage(downaction);
-            if (screenfull.enabled) {
-               screenfull.request();
-            };
-        },
-        swipeRight:function(event, direction, distance, duration, fingerCount) {
-            changeImage(rightaction);
-            if (screenfull.enabled) {
-               screenfull.request();
-            };
-        },
-    });
+    // the gear VR's touchpad is logically flipped from UDLR on a screen
+    // if we detect Samsung Internet, flip axes for input
+    if ((navigator.userAgent.indexOf('SamsungBrowser') != -1)) {
+        upaction = downact;
+        downaction = upact;
+        leftaction = rightact;
+        rightaction = leftact;
+        // cataction = dogact;
+        // eastaction = westact;
+        // ukaction = anarchy;
+        console.log('detected Gear VR');
+        $( ".ui-page" ).swipe( {
+            swipeLeft:function(event, direction, distance, duration, fingerCount) {
+                changeImage(leftaction);
+                if (screenfull.enabled) {
+                   screenfull.request();
+                };
+            },
+            swipeUp:function(event, direction, distance, duration, fingerCount) {
+                changeImage(upaction);
+                if (screenfull.enabled) {
+                   screenfull.request();
+                };
+            },
+            swipeDown:function(event, direction, distance, duration, fingerCount) {
+                changeImage(downaction);
+                if (screenfull.enabled) {
+                   screenfull.request();
+                };
+            },
+            swipeRight:function(event, direction, distance, duration, fingerCount) {
+                changeImage(rightaction);
+                if (screenfull.enabled) {
+                   screenfull.request();
+                };
+            },
+        });
+    }
+    else {
+        upaction = upact;
+        downaction = downact;
+        leftaction = leftact;
+        rightaction = rightact;
+        $('.ui-page').click(function() {
+            $.get(flaskServ + '/' + dbname + "/imgtap");
+            $('#tapbox').html('<p>' + tapfolder + '</p>');
+            $('#tapbox').css('background-color', tapcolor);
+            $('#tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
+        });
+    }
     $( document ).keydown(function(e) {
         switch(e.which) {
             case 37:
