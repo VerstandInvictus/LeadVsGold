@@ -44,6 +44,7 @@ $( document ).ready(function() {
     $('#mainImg').attr('src', flaskServ + '/' + dbname + '/image/' + numRand);
     // the gear VR's touchpad is logically flipped from UDLR on a screen
     // if we detect Samsung Internet, flip axes for input
+    // also, disable swipe control on GVR to allow clickthru tap
     if ((navigator.userAgent.indexOf('SamsungBrowser') != -1)) {
         upaction = downact;
         downaction = upact;
@@ -53,6 +54,18 @@ $( document ).ready(function() {
         // eastaction = westact;
         // ukaction = anarchy;
         console.log('detected Gear VR');
+        $('.ui-page').click(function() {
+            $.get(flaskServ + '/' + dbname + "/imgtap");
+            $('#tapbox').html('<p>' + tapfolder + '</p>');
+            $('#tapbox').css('background-color', tapcolor);
+            $('#tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
+        });
+    }
+    else {
+        upaction = upact;
+        downaction = downact;
+        leftaction = leftact;
+        rightaction = rightact;
         $( ".ui-page" ).swipe( {
             swipeLeft:function(event, direction, distance, duration, fingerCount) {
                 changeImage(leftaction);
@@ -78,18 +91,6 @@ $( document ).ready(function() {
                    screenfull.request();
                 };
             },
-        });
-    }
-    else {
-        upaction = upact;
-        downaction = downact;
-        leftaction = leftact;
-        rightaction = rightact;
-        $('.ui-page').click(function() {
-            $.get(flaskServ + '/' + dbname + "/imgtap");
-            $('#tapbox').html('<p>' + tapfolder + '</p>');
-            $('#tapbox').css('background-color', tapcolor);
-            $('#tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
         });
     }
     $( document ).keydown(function(e) {
