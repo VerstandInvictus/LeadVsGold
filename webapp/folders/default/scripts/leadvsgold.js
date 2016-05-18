@@ -10,7 +10,10 @@ function updateStats(num) {
     });
 }
 
-function changeImage(actionUrl, infoText, infoColor) {
+function changeImage(argsobj) {
+    var actionUrl = argsobj[0]
+    var infoText = argsobj[1]
+    var infoColor = argsobj[2]
     var numRand = Math.floor(Math.random() * 100001);
     $('#mainImg').off("load");
     $('#mainImg').fadeTo(350, 0, function() {
@@ -28,6 +31,30 @@ function changeImage(actionUrl, infoText, infoColor) {
 
 var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
+upact = '/next/up/', upfolder, upcolor;
+downact = '/next/down/', downfolder, downcolor;
+leftact = '/next/skip/', 'skipped', 'grey';
+rightact = '/prev/', 'back', 'grey';
+
+// the gear VR's touchpad is logically flipped from UDLR on a screen
+// if we detect Samsung Internet, flip axes for input
+if ((navigator.userAgent.indexOf('SamsungBrowser') != -1)) {
+    upaction = downact;
+    downaction = upact;
+    leftaction = rightact;
+    rightaction = leftact;
+    // cataction = dogact;
+    // eastaction = westact;
+    // ukaction = anarchy;
+    console.log('detected Gear VR');
+}
+else {
+    upaction = upact;
+    downaction = downact;
+    leftaction = leftact;
+    rightaction = rightact;
+}
+
 $( document ).ready(function() {
     $(".floatbox").fadeTo(0,0);
     var numRand = Math.floor(Math.random() * 100001);
@@ -35,25 +62,25 @@ $( document ).ready(function() {
     $('#mainImg').attr('src', flaskServ + '/' + dbname + '/image/' + numRand);
     $( ".ui-page" ).swipe( {
         swipeLeft:function(event, direction, distance, duration, fingerCount) {
-            changeImage('/next/skip/', 'skipped', 'grey');
+            changeImage(leftaction);
             if (screenfull.enabled) {
                screenfull.request();
             };
         },
         swipeUp:function(event, direction, distance, duration, fingerCount) {
-            changeImage('/next/up/', upfolder, upcolor);
+            changeImage(upaction);
             if (screenfull.enabled) {
                screenfull.request();
             };
         },
         swipeDown:function(event, direction, distance, duration, fingerCount) {
-            changeImage('/next/down/', downfolder, downcolor);
+            changeImage(downaction);
             if (screenfull.enabled) {
                screenfull.request();
             };
         },
         swipeRight:function(event, direction, distance, duration, fingerCount) {
-            changeImage('/prev/', 'back', 'grey');
+            changeImage(rightaction);
             if (screenfull.enabled) {
                screenfull.request();
             };
@@ -62,16 +89,16 @@ $( document ).ready(function() {
     $( document ).keydown(function(e) {
         switch(e.which) {
             case 37:
-                changeImage('/prev/', 'back', 'grey');
+                changeImage(rightaction);
                 break;
             case 38:
-                changeImage('/next/up/', upfolder, upcolor);
+                changeImage(upaction);
                 break;
             case 39:
-                changeImage('/next/skip/', 'skipped', 'grey');
+                changeImage(leftaction);
                 break;
             case 40:
-                changeImage('/next/down/', downfolder, downcolor);
+                changeImage(downaction);
                 break;
             case 32:
             case 35:
