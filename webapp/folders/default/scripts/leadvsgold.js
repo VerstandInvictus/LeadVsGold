@@ -116,11 +116,11 @@ $( document ).ready(function() {
         $('#tapbox').css('background-color', tapcolor);
         $('#tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
     });
-    $(".cornerbox").click(function() {
+    $("#cornerbox").click(function() {
         $.get(flaskServ + '/' + dbname + "/info/reset");
         updateStats(78);
     });
-    $("#rightcornerbox").click(function() {
+    $("#rightcornerhot").click(function() {
         $.get(flaskServ + '/' + dbname + "/imgtap");
         $('#tapbox').html('<p>' + tapfolder + '</p>');
         $('#tapbox').css('background-color', tapcolor);

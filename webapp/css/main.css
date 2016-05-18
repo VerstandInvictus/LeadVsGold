@@ -52,7 +52,7 @@ img.cover {
 .cornercount {
     font-size: 70%;
 }
-#rightcornerbox {
+#rightcornerhot {
     float: right;
     font-size: 300%;
     margin-left: 95%;
@@ -78,7 +78,7 @@ img.cover {
     .floatbox {
         font-size: 250%;
     }
-    #rightcornerbox {
+    #rightcornerhot {
         font-size: 300%;
     }
 }
