@@ -52,6 +52,10 @@ img.cover {
 .cornercount {
     font-size: 70%;
 }
+#rightcornerbox {
+    float: right;
+    font-size: 150%;
+}
 .floatbox {
     display: block;
     background-color: grey;
