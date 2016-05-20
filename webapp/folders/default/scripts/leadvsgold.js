@@ -89,19 +89,25 @@ $( document ).ready(function() {
     $( document ).keydown(function(e) {
         switch(e.which) {
             case 37:
+            case 22:
                 changeImage(rightaction);
                 break;
             case 38:
+            case 19:
                 changeImage(upaction);
                 break;
             case 39:
+            case 21:
                 changeImage(leftaction);
                 break;
+            case 20:
             case 40:
                 changeImage(downaction);
                 break;
             case 32:
             case 35:
+            case 102:
+            case 103:
                 $.get(flaskServ + '/' + dbname + "/imgtap");
                 $('#tapbox').html('<p>' + tapfolder + '</p>');
                 $('#tapbox').css('background-color', tapcolor);
