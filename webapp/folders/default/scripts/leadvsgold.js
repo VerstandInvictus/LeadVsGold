@@ -29,6 +29,12 @@ function changeImage(argsobj) {
     $('#actionbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
 }
 
+function keylog(code) {
+    $('#tapbox').html('<p>' + code + '</p>');
+    $('#tapbox').css('background-color', 'indigo');
+    $('#tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
+}
+
 var flaskServ = 'http:' + window.location.origin.split(':')[1] + ':5000';
 
 upact = ['/next/up/', upfolder, upcolor];
@@ -112,7 +118,9 @@ $( document ).ready(function() {
                 $('#tapbox').html('<p>' + tapfolder + '</p>');
                 $('#tapbox').css('background-color', tapcolor);
                 $('#tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
-            default: return;
+            default:
+                keylog(e.which);
+                return;
         }
         e.preventDefault();
     });
