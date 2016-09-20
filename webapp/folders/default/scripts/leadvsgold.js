@@ -118,6 +118,7 @@ $( document ).ready(function() {
                 $('#tapbox').html('<p>' + tapfolder + '</p>');
                 $('#tapbox').css('background-color', tapcolor);
                 $('#tapbox').fadeTo(250, 0.7).delay(1000).fadeTo(250, 0);
+                break;
             default:
                 keylog(e.which);
                 return;
