@@ -127,8 +127,8 @@ initDict = dict(
         loc='webapp\\img\\nomore.png'))
 indexes = dict(
     _id="index",
-    batch=1,
-    session=1,)
+    bat=1,
+    ses=1,)
 for folder in initDict['actions'].itervalues():
     if not os.path.exists(folder):
         os.makedirs(folder)

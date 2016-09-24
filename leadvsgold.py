@@ -68,7 +68,7 @@ def updateLocation(index, location, dbname):
 
 def getCurFile(dbname):
     curFile = dbHandles(dbname, 'fldb').get_item(
-        Key={"_id": currentIndex(dbname)["batch"]})['Item']
+        Key={"_id": currentIndex(dbname)["bat"]})['Item']
     if curFile is None:
         return dbHandles(dbname, 'cfgdb')["noneObject"]
     else:
@@ -78,10 +78,10 @@ def getCurFile(dbname):
 def incrementIndex(num, dbname):
     dbHandles(dbname, 'initdb').update_item(
         Key={'_id': "index"},
-        UpdateExpression="SET batch = :b, session = :s",
+        UpdateExpression="SET bat = :b, ses = :s",
         ExpressionAttributeValues={
-            ":b": currentIndex(dbname)["batch"] + num,
-            ":s": currentIndex(dbname)["session"] + num
+            ":b": currentIndex(dbname)["bat"] + num,
+            ":s": currentIndex(dbname)["ses"] + num
         }
     )
 
@@ -89,7 +89,7 @@ def incrementIndex(num, dbname):
 def setIndex(num, dbname):
     dbHandles(dbname, 'initdb').update_item(
         Key={'_id': "index"},
-        UpdateExpression="SET batch = :b",
+        UpdateExpression="SET bat = :b",
         ExpressionAttributeValues={
             ":b": num,
         }
@@ -99,7 +99,7 @@ def setIndex(num, dbname):
 def resetSession(num, dbname):
     dbHandles(dbname, 'initdb').update_item(
         Key={'_id': "index"},
-        UpdateExpression="SET session = :s",
+        UpdateExpression="SET ses = :s",
         ExpressionAttributeValues={
             ":s": num
         }
@@ -120,7 +120,7 @@ def getFolders():
 
 @app.route('/<dbname>/image/<nonce>')
 def showFile(nonce, dbname):
-    return send_file(getCurFile(dbname)["location"])
+    return send_file(getCurFile(dbname)["loca"])
 
 
 @app.route('/<dbname>/next/<action>/<nonce>')
@@ -128,15 +128,15 @@ def skipForward(action, nonce, dbname):
     curFile = getCurFile(dbname)
     if curFile == dbHandles(dbname, 'cfgdb')['noneObject']:
         setIndex(0, dbname)
-        return send_file(dbHandles(dbname, 'cfgdb')['noneObject']["location"])
+        return send_file(dbHandles(dbname, 'cfgdb')['noneObject']["loc"])
     newPath = os.path.join(dbHandles(
         dbname, 'cfgdb')['actions'][action], curFile["name"])
-    if curFile['location'] != newPath:
-        shutil.copy2(curFile['location'], newPath)
-        os.remove(curFile['location'])
+    if curFile['loc'] != newPath:
+        shutil.copy2(curFile['loc'], newPath)
+        os.remove(curFile['loc'])
         updateLocation(currentIndex(dbname)['batch'], newPath, dbname)
     incrementIndex(1, dbname)
-    return send_file(getCurFile(dbname)['location'])
+    return send_file(getCurFile(dbname)['loc'])
 
 
 @app.route('/<dbname>/imgtap')
@@ -144,20 +144,20 @@ def tapAction(dbname):
     curFile = getCurFile(dbname)
     newPath = os.path.join(dbHandles(
         dbname, 'cfgdb')['actions']['tap'], curFile['name'])
-    shutil.copy2(curFile['location'], newPath)
+    shutil.copy2(curFile['loc'], newPath)
     return "OK", 200
 
 
 @app.route('/<dbname>/prev/<nonce>')
 def skipBack(nonce, dbname):
     incrementIndex(-1, dbname)
-    return send_file(getCurFile(dbname)['location'])
+    return send_file(getCurFile(dbname)['loc'])
 
 
 @app.route('/<dbname>/info/<nonce>')
 def sendFolder(nonce, dbname):
     f = getCurFile(dbname)
-    npath = f['location']
+    npath = f['loc']
     curfile = os.path.split(npath)[0]
     folder = os.path.split(curfile)[1]
     creator = f['creator']
@@ -165,8 +165,8 @@ def sendFolder(nonce, dbname):
     retstring = ":".join((
         folder,
         creator,
-        str(currentIndex(dbname)['batch']),
-        str(currentIndex(dbname)['session']),
+        str(currentIndex(dbname)['bat']),
+        str(currentIndex(dbname)['ses']),
         str(itemsRemain(dbname)),
         mtime
     ))
