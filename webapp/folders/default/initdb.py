@@ -134,7 +134,7 @@ for each in initDict['actions'].itervalues():
     if not os.path.exists(each):
         os.makedirs(each)
 initdb.put_item(Item=initDict)
-with fldb.batch_writer as fldbatch:
+with fldb.batch_writer() as fldbatch:
     for each in stackQueue:
         fldbatch.put_item(Item=each)
 initdb.put_item(Item=indexes)
