@@ -20,6 +20,7 @@ dbresource = boto3.resource(
     aws_secret_access_key=config.awskey,
     region_name='us-west-2'
 )
+folderdb = dbresource.Table('lvgfolders')
 
 
 def jsonWrapper(inputStructure, isCursor=1):
@@ -67,7 +68,7 @@ def updateLocation(index, location, dbname):
 
 def getCurFile(dbname):
     curFile = dbHandles(dbname, 'fldb').get_item(
-        Key={"_id": currentIndex(dbname)["batch"]})
+        Key={"_id": currentIndex(dbname)["batch"]})['Item']
     if curFile is None:
         return dbHandles(dbname, 'cfgdb')["noneObject"]
     else:
@@ -112,7 +113,9 @@ def itemsRemain(dbname):
 
 @app.route('/folders')
 def getFolders():
-    return jsonWrapper(db.folders.find_one()['folders'], isCursor=0)
+    return jsonWrapper(folderdb.get_item(
+        Key={"index": 1}
+    )['Item']['folders'], isCursor=0)
 
 
 @app.route('/<dbname>/image/<nonce>')
