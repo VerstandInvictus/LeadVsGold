@@ -75,12 +75,11 @@ dbresource = boto3.resource(
     region_name='us-west-2'
 )
 initdb = dbresource.Table(initdbn)
-print "reset init DB"
+print "reset init DB\n"
 clearTable(dbclient, fldbn)
 fldb = dbresource.Table(fldbn)
-print "reset filelist DB"
+print "reset filelist DB\n"
 
-exit()
 
 outf = os.path.join(os.getcwdu(), "output")
 inf = os.path.join(os.getcwdu(), config.inputfolder)
