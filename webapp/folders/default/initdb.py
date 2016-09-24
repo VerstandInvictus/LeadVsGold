@@ -108,7 +108,7 @@ for f in stackFiles:
     fileobj = dict(
         _id=count,
         name=f,
-        location=os.path.join(inf, f),
+        loc=os.path.join(inf, f),
         creator=creator,
         mtime=mtime)
     stackQueue.append(fileobj)
@@ -124,7 +124,7 @@ initDict = dict(
         tap=os.path.join(outf, config.tapfolder)),
     noneObject=dict(
         name='nomore.png',
-        location='webapp\\img\\nomore.png'))
+        loc='webapp\\img\\nomore.png'))
 indexes = dict(
     _id="index",
     batch=1,

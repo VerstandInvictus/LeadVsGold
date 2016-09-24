@@ -59,7 +59,7 @@ def currentIndex(dbname):
 def updateLocation(index, location, dbname):
     dbHandles(dbname, 'fldb').update_item(
         Key={"_id": index},
-        UpdateExpression="SET location = :l",
+        UpdateExpression="SET loc = :l",
         ExpressionAttributeValues={
             ":l": location
         }
