@@ -134,7 +134,7 @@ def skipForward(action, nonce, dbname):
     if curFile['loc'] != newPath:
         shutil.copy2(curFile['loc'], newPath)
         os.remove(curFile['loc'])
-        updateLocation(currentIndex(dbname)['batch'], newPath, dbname)
+        updateLocation(currentIndex(dbname)['bat'], newPath, dbname)
     incrementIndex(1, dbname)
     return send_file(getCurFile(dbname)['loc'])
 
