@@ -120,7 +120,7 @@ def getFolders():
 
 @app.route('/<dbname>/image/<nonce>')
 def showFile(nonce, dbname):
-    return send_file(getCurFile(dbname)["loca"])
+    return send_file(getCurFile(dbname)["loc"])
 
 
 @app.route('/<dbname>/next/<action>/<nonce>')
