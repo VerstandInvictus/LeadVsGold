@@ -18,7 +18,7 @@ def checkTableExists(client, checkname):
         return False
 
 
-def createTable(client, cname):
+def createTable(client, cname, indextype):
     table = client.create_table(
         TableName=cname,
         KeySchema=[
@@ -30,7 +30,7 @@ def createTable(client, cname):
         AttributeDefinitions=[
             {
                 'AttributeName': '_id',
-                'AttributeType': 'S'
+                'AttributeType': indextype
             },
         ],
         ProvisionedThroughput={
@@ -42,12 +42,12 @@ def createTable(client, cname):
     return table
 
 
-def clearTable(client, tname):
+def clearTable(client, tname, indextype):
     if checkTableExists(client, tname):
         client.delete_table(TableName=tname)
         print "deleted {0}".format(tname)
         time.sleep(5)
-        createTable(client, tname)
+        createTable(client, tname, indextype)
         time.sleep(5)
     res = checkTableExists(client, tname)
     while True:
@@ -67,7 +67,7 @@ dbclient = boto3.client(
 initdbn = config.dbname + '-init'
 fldbn = config.dbname + '-fldb'
 
-clearTable(dbclient, initdbn)
+clearTable(dbclient, initdbn, 'S')
 dbresource = boto3.resource(
     'dynamodb',
     aws_access_key_id=config.awskeyid,
@@ -76,7 +76,7 @@ dbresource = boto3.resource(
 )
 initdb = dbresource.Table(initdbn)
 print "reset init DB\n"
-clearTable(dbclient, fldbn)
+clearTable(dbclient, fldbn, 'N')
 fldb = dbresource.Table(fldbn)
 print "reset filelist DB\n"
 
@@ -87,7 +87,7 @@ stackFiles = list()
 fileList = [x for x in os.listdir(inf) if not os.path.isdir(x)]
 fileList.sort(key=lambda x: os.path.getmtime(os.path.join(inf, x)))
 fileList.reverse()
-print "{0} files processed into DB.".format(len(fileList))
+
 for f in fileList:
     if os.path.splitext(f)[1] in (
             ".jpg", ".jpeg", ".gif", ".png"):
@@ -138,3 +138,4 @@ with fldb.batch_writer() as fldbatch:
     for each in stackQueue:
         fldbatch.put_item(Item=each)
 initdb.put_item(Item=indexes)
+print "\n{0} files processed into DB.".format(len(fileList))

@@ -1,6 +1,5 @@
 import os
 import shutil
-import pymongo
 from flask import Flask, send_file, request, Response, json
 from flask_cors import CORS
 
