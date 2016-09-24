@@ -1,15 +1,87 @@
 import os
 import re
 import arrow
-import pymongo
+import boto3
 import config
+import time
 
-client = pymongo.MongoClient()
-db = client.leadvsgold
-initdbn = "init" + config.dbname
-fldbn = 'fileList' + config.dbname
-initdb = db[initdbn]
-fl = db[fldbn]
+
+def checkTableExists(client, checkname):
+    try:
+        check = client.describe_table(
+            TableName=checkname
+        )
+        res = check['Table']['TableStatus']
+        print "currently {0}: {1}".format(res, checkname)
+        return res
+    except:
+        return False
+
+
+def createTable(client, cname):
+    table = client.create_table(
+        TableName=cname,
+        KeySchema=[
+            {
+                'AttributeName': '_id',
+                'KeyType': 'HASH'
+            },
+        ],
+        AttributeDefinitions=[
+            {
+                'AttributeName': '_id',
+                'AttributeType': 'S'
+            },
+        ],
+        ProvisionedThroughput={
+            'ReadCapacityUnits': 5,
+            'WriteCapacityUnits': 5,
+        }
+    )
+    print "created {0}".format(cname)
+    return table
+
+
+def clearTable(client, tname):
+    if checkTableExists(client, tname):
+        client.delete_table(TableName=tname)
+        print "deleted {0}".format(tname)
+        time.sleep(5)
+        createTable(client, tname)
+        time.sleep(5)
+    res = checkTableExists(client, tname)
+    while True:
+        if res == 'ACTIVE':
+            return
+        else:
+            time.sleep(1)
+            res = checkTableExists(client, tname)
+
+
+dbclient = boto3.client(
+    'dynamodb',
+    aws_access_key_id=config.awskeyid,
+    aws_secret_access_key=config.awskey,
+    region_name='us-west-2'
+)
+initdbn = config.dbname + '-init'
+fldbn = config.dbname + '-fldb'
+
+clearTable(dbclient, initdbn)
+dbresource = boto3.resource(
+    'dynamodb',
+    aws_access_key_id=config.awskeyid,
+    aws_secret_access_key=config.awskey,
+    region_name='us-west-2'
+)
+initdb = dbresource.Table(initdbn)
+print "reset init DB"
+clearTable(dbclient, fldbn)
+fldb = dbresource.Table(fldbn)
+print "reset filelist DB"
+
+exit()
+
 outf = os.path.join(os.getcwdu(), "output")
 inf = os.path.join(os.getcwdu(), config.inputfolder)
 stackFiles = list()
@@ -59,11 +131,11 @@ indexes = dict(
 for folder in initDict['actions'].itervalues():
     if not os.path.exists(folder):
         os.makedirs(folder)
-fl.drop()
-initdb.drop()
 for each in initDict['actions'].itervalues():
     if not os.path.exists(each):
         os.makedirs(each)
-initdb.insert_one(initDict)
-fl.insert_many(stackQueue)
-initdb.insert_one(indexes)
+initdb.put_item(initDict)
+with fldb.batch_writer as fldbatch:
+    for each in stackQueue:
+        fldbatch.put_item(each)
+initdb.put_item(indexes)
