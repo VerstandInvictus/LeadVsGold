@@ -47,8 +47,8 @@ def clearTable(client, tname, indextype):
         client.delete_table(TableName=tname)
         print "deleted {0}".format(tname)
         time.sleep(5)
-        createTable(client, tname, indextype)
-        time.sleep(5)
+    createTable(client, tname, indextype)
+    time.sleep(5)
     res = checkTableExists(client, tname)
     while True:
         if res == 'ACTIVE':
