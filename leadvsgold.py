@@ -1,13 +1,25 @@
 import os
 import shutil
+import boto3
 from flask import Flask, send_file, request, Response, json
 from flask_cors import CORS
+import config
 
 app = Flask(__name__)
 CORS(app)
 
-client = pymongo.MongoClient()
-db = client.leadvsgold
+dbclient = boto3.client(
+    'dynamodb',
+    aws_access_key_id=config.awskeyid,
+    aws_secret_access_key=config.awskey,
+    region_name='us-west-2'
+)
+dbresource = boto3.resource(
+    'dynamodb',
+    aws_access_key_id=config.awskeyid,
+    aws_secret_access_key=config.awskey,
+    region_name='us-west-2'
+)
 
 
 def jsonWrapper(inputStructure, isCursor=1):
@@ -25,34 +37,37 @@ def jsonWrapper(inputStructure, isCursor=1):
 
 
 def dbHandles(dbname, whichdb):
-    initdbn = "init" + dbname
-    fldbn = 'fileList' + dbname
+    initdbn = dbname + '-init'
+    fldbn = dbname + '-fldb'
     if whichdb == "fldb":
-        return db[fldbn]
+        return dbresource.Table(fldbn)
     if whichdb == "initdb":
-        return db[initdbn]
+        return dbresource.Table(initdbn)
     if whichdb == "cfgdb":
-        return db[initdbn].find_one({'_id': "initDict"})
+        return dbresource.Table(initdbn).get_item(
+            Key={'_id': "initDict"}
+        )['Item']
 
 
 def currentIndex(dbname):
-    return dbHandles(dbname, 'initdb').find_one({"_id": "index"})
+    return dbHandles(dbname, 'initdb').get_item(
+        Key={"_id": "index"}
+    )['Item']
 
 
 def updateLocation(index, location, dbname):
-    dbHandles(dbname, 'fldb').update_one(
-        {"_id": index},
-        {
-            "$set": {
-                "location": location
-            }
+    dbHandles(dbname, 'fldb').update_item(
+        Key={"_id": index},
+        UpdateExpression="SET location = :l",
+        ExpressionAttributeValues={
+            ":l": location
         }
     )
 
 
 def getCurFile(dbname):
-    curFile = dbHandles(dbname, 'fldb').find_one(
-        {"_id": currentIndex(dbname)["batch"]})
+    curFile = dbHandles(dbname, 'fldb').get_item(
+        Key={"_id": currentIndex(dbname)["batch"]})
     if curFile is None:
         return dbHandles(dbname, 'cfgdb')["noneObject"]
     else:
@@ -60,35 +75,32 @@ def getCurFile(dbname):
 
 
 def incrementIndex(num, dbname):
-    dbHandles(dbname, 'initdb').update_one(
-        {'_id': "index"},
-        {
-            "$set": {
-                "batch": currentIndex(dbname)["batch"] + num,
-                "session": currentIndex(dbname)["session"] + num
-            }
+    dbHandles(dbname, 'initdb').update_item(
+        Key={'_id': "index"},
+        UpdateExpression="SET batch = :b, session = :s",
+        ExpressionAttributeValues={
+            ":b": currentIndex(dbname)["batch"] + num,
+            ":s": currentIndex(dbname)["session"] + num
         }
     )
 
 
 def setIndex(num, dbname):
-    dbHandles(dbname, 'initdb').update_one(
-        {'_id': "index"},
-        {
-            "$set": {
-                "batch": num,
-            }
+    dbHandles(dbname, 'initdb').update_item(
+        Key={'_id': "index"},
+        UpdateExpression="SET batch = :b",
+        ExpressionAttributeValues={
+            ":b": num,
         }
     )
 
 
 def resetSession(num, dbname):
-    dbHandles(dbname, 'initdb').update_one(
-        {'_id': "index"},
-        {
-            "$set": {
-                "session": num
-            }
+    dbHandles(dbname, 'initdb').update_item(
+        Key={'_id': "index"},
+        UpdateExpression="SET session = :s",
+        ExpressionAttributeValues={
+            ":s": num
         }
     )
 

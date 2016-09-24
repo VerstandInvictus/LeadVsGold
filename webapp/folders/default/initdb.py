@@ -64,16 +64,18 @@ dbclient = boto3.client(
     aws_secret_access_key=config.awskey,
     region_name='us-west-2'
 )
-initdbn = config.dbname + '-init'
-fldbn = config.dbname + '-fldb'
-
-clearTable(dbclient, initdbn, 'S')
 dbresource = boto3.resource(
     'dynamodb',
     aws_access_key_id=config.awskeyid,
     aws_secret_access_key=config.awskey,
     region_name='us-west-2'
 )
+
+initdbn = config.dbname + '-init'
+fldbn = config.dbname + '-fldb'
+
+clearTable(dbclient, initdbn, 'S')
+
 initdb = dbresource.Table(initdbn)
 print "reset init DB\n"
 clearTable(dbclient, fldbn, 'N')

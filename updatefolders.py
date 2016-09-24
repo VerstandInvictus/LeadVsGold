@@ -1,9 +1,21 @@
 import os
-import pymongo
+import boto3
+import config
 
-client = pymongo.MongoClient()
-db = client.leadvsgold
-folderdb = db.folders
+dbclient = boto3.client(
+    'dynamodb',
+    aws_access_key_id=config.awskeyid,
+    aws_secret_access_key=config.awskey,
+    region_name='us-west-2'
+)
+dbresource = boto3.resource(
+    'dynamodb',
+    aws_access_key_id=config.awskeyid,
+    aws_secret_access_key=config.awskey,
+    region_name='us-west-2'
+)
+
+folderdb = dbresource.table('lvgfolders')
 
 
 def listFolders():
@@ -14,9 +26,16 @@ def listFolders():
 
 
 def foldersToDb(dirlist):
-    folderdb.insert_one({"folders":dirlist})
+    folderdb.put_item(
+        Item={
+            "index": 1,
+            "folders": dirlist
+        }
+    )
 
 if __name__ == "__main__":
-    folderdb.drop()
+    folderdb.delete_item(
+        Key={"index": 1}
+    )
     dlist = listFolders()
     foldersToDb(dlist)
