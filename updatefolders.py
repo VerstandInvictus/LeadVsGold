@@ -15,7 +15,7 @@ dbresource = boto3.resource(
     region_name='us-west-2'
 )
 
-folderdb = dbresource.table('lvgfolders')
+folderdb = dbresource.Table('lvgfolders')
 
 
 def listFolders():
